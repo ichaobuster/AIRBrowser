@@ -1,0 +1,22 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+s|Application{
+	fontSize:14;
+}
+
+s|Button{
+	skinClass:ClassReference("com.ichaobuster.browser.skin.FlatButtonSkin");
+}
+
+.icon_only{
+	skinClass:ClassReference("com.ichaobuster.browser.skin.IconButtonSkin");
+}
+
+mx|ScrollBar{
+	downArrowSkin:ClassReference(null);
+	upArrowSkin:ClassReference(null);
+	thumbSkin:ClassReference("com.ichaobuster.browser.skin.ScrollBarThumbSkin");
+	trackSkin:ClassReference("com.ichaobuster.browser.skin.ScrollBarTrackSkin");
+}

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+ADOBE SYSTEMS INCORPORATED
+Copyright 2008 Adobe Systems Incorporated
+All Rights Reserved.
+
+NOTICE: Adobe permits you to use, modify, and distribute this file
+in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- 
+
+The default skin class for the Spark TabBar component. The ButtonBarButtons 
+created by the TabBarSkin use the TabBarButtonSkin class.  
+
+@see spark.components.TabBar
+@see spark.components.ButtonBarButton
+@see spark.skins.spark.TabBarButtonSkin
+
+@langversion 3.0
+@playerversion Flash 10
+@playerversion AIR 1.5
+@productversion Flex 4
+
+-->
+
+<s:Skin 
+    xmlns:fx="http://ns.adobe.com/mxml/2009" 
+    xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009"     
+    alpha.disabled="0.5" 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:component="com.ichaobuster.browser.component.*">
+    
+    <fx:Metadata>
+        <![CDATA[ 
+        	[HostComponent("com.ichaobuster.browser.component.BrowserTabBar")]
+        ]]>
+    </fx:Metadata> 
+    
+    <fx:Script  fb:purpose="styling" >
+        <![CDATA[ 
+			import mx.core.UIComponent;
+			import mx.events.FlexEvent;
+
+        /**
+         *  @private
+         *  Push the cornerRadius style to the item renderers.
+         */
+        override protected function updateDisplayList(unscaledWidth:Number, unscaleHeight:Number):void
+        {
+            const numElements:int = dataGroup.numElements;
+            const cornerRadius:int = hostComponent.getStyle("cornerRadius");
+            for (var i:int = 0; i < numElements; i++)
+            {
+                var elt:UIComponent = dataGroup.getElementAt(i) as UIComponent;
+                if (elt)
+                    elt.setStyle("cornerRadius", cornerRadius);
+            }
+			
+            super.updateDisplayList(unscaledWidth, unscaledHeight);
+        }
+			
+			protected function scrollerMouseWheelHandler(event:MouseEvent):void
+			{
+				scroller.horizontalScrollBar.value -= event.delta*10;
+			}
+			
+			protected function leftScrollerDownHandler(event:FlexEvent):void
+			{
+				scroller.horizontalScrollBar.value -= 120;
+			}
+			
+			protected function rightScrollerDownHandler(event:FlexEvent):void
+			{
+				scroller.horizontalScrollBar.value += 120;
+			}
+            
+        ]]>            
+    </fx:Script>
+    
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="disabled" />
+    </s:states>
+	
+	<s:Scroller id="scroller" verticalScrollPolicy="off" horizontalScrollPolicy="off" 
+				width="100%" height="100%" left="26" right="26"
+				mouseWheel="scrollerMouseWheelHandler(event)">
+		<!--- @copy spark.components.SkinnableDataContainer#dataGroup -->
+		<s:DataGroup id="dataGroup" width="100%" height="100%" bottom="2">
+			<s:layout>
+				<s:HorizontalLayout gap="-20" variableColumnWidth="false" columnWidth="200"/>
+			</s:layout>
+			<s:itemRenderer>
+				<fx:Component>
+					<component:BrowserTabBarButton mouseChildren="true"/>
+				</fx:Component>
+			</s:itemRenderer>
+		</s:DataGroup>
+	</s:Scroller>
+	
+	<s:Line left="0" right="0" bottom="0">
+		<s:stroke>
+			<s:SolidColorStroke color="#017ccc" weight="2"/>
+		</s:stroke>
+	</s:Line>
+	
+	<mx:LinkButton id="leftScroller" width="25" height="25" top="5"
+				   skin="@Embed(source='assets/img/leftBtn.png')"
+				   overSkin="@Embed(source='assets/img/leftBtn.png')"
+				   downSkin="@Embed(source='assets/img/leftBtn.png')"
+				   visible="{scroller.horizontalScrollBar.value>0}"
+				   enabled="{scroller.horizontalScrollBar.value>0}"
+				   autoRepeat="true" buttonDown="leftScrollerDownHandler(event)"/>
+	<mx:LinkButton id="rightScroller" width="25" height="25" top="5" right="0"
+				   skin="@Embed(source='assets/img/rightBtn.png')"
+				   overSkin="@Embed(source='assets/img/rightBtn.png')"
+				   downSkin="@Embed(source='assets/img/rightBtn.png')"
+				   visible="{scroller.horizontalScrollBar.value &lt; (dataGroup.contentWidth - dataGroup.width)}"
+				   enabled="{scroller.horizontalScrollBar.value &lt; (dataGroup.contentWidth - dataGroup.width)}"
+				   autoRepeat="true" buttonDown="rightScrollerDownHandler(event)"/>
+	
+			 
+    
+</s:Skin>

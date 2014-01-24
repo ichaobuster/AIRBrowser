@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx" 
+				   xmlns:component="com.ichaobuster.browser.component.*"
+				   borderColor="0x017CCC"
+				   backgroundColor="0x017CCC"
+				   width="100%" height="40"  >
+	<s:layout>
+		<s:HorizontalLayout paddingLeft="10" paddingRight="10" verticalAlign="middle"/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import com.ichaobuster.browser.util.FileUtil;
+			import com.ichaobuster.browser.util.SharedObjectUtils;
+			
+			[Bindable]
+			public var fileName:String = "";
+			
+			public var fileData:ByteArray;
+			
+			[Bindable]
+			public var openable:Boolean = true;
+			
+			public function downloadFile(dateArr:ByteArray, filename:String):void{
+				currentState = "download";
+				fileData = dateArr;
+				fileName = filename;
+				visible = true;
+				includeInLayout = true;
+				
+				openable = FileUtil.validateFileNameSuffix(fileName);
+			}
+			
+			public function prepareDownload():void{
+				currentState = "prepare";
+				visible = true;
+				includeInLayout = true;
+			}
+			
+			protected function save_clickHandler(event:MouseEvent):void
+			{
+				var lastPath:String = SharedObjectUtils.getShareObject("lastDownloadPath") as String;
+				var downFile:File;
+				if (lastPath!==null && lastPath!==""){
+					downFile = new File(lastPath);
+				}else{
+					downFile = new File(File.documentsDirectory.nativePath);
+				}
+				downFile.addEventListener(Event.COMPLETE, function(e:Event):void{
+					SharedObjectUtils.saveShareObject("lastDownloadPath", downFile.parent.nativePath);
+				});
+				if (!downFile.exists){
+					downFile = new File(File.documentsDirectory.nativePath);
+				}
+				downFile.save(fileData, fileName);
+				cancel_clickHandler();
+			}
+			
+			
+			protected function open_clickHandler(event:MouseEvent):void
+			{
+				var tempFile:File = new File(File.createTempDirectory().resolvePath(fileName).nativePath);
+				var fileStream:FileStream = new FileStream(); 
+				fileStream.open(tempFile, FileMode.WRITE);
+				fileStream.writeBytes(fileData,0,fileData.bytesAvailable);
+				fileStream.close();
+				tempFile.openWithDefaultApplication();
+				cancel_clickHandler();
+			}
+			
+			protected function cancel_clickHandler(event:MouseEvent=null):void
+			{
+				visible = false;
+				includeInLayout = false;
+				dispatchEvent(new Event("fileDownloadComplete"));
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:states>
+		<s:State name="prepare"/>
+		<s:State name="download"/>
+	</s:states>
+	<component:BusyIndicator width="16"
+							height="16"
+							visible.download="false"
+							includeIn="prepare"
+							visible.prepare="true"/>
+	<s:Label text.download="已下载 " 
+			 text.prepare="正在准备下载文件"
+			 color="#ffffff"
+			 fontWeight="bold"/>
+	<s:Label text="{fileName}" color="#ffffff"
+			 visible.prepare="false" 
+			 visible.download="true"
+			 fontWeight="bold"
+			 lineBreak="explicit"
+			 width="400" />
+	<s:Spacer width="100%"/>
+	<s:Button label="保存" 
+			  width="60"
+			  visible.prepare="false" 
+			  visible.download="true"
+			  click="save_clickHandler(event)"/>
+	<s:Button label="打开" 
+			  width="60"
+			  visible.prepare="false"
+			  visible.download="{openable}"
+			  includeInLayout="{openable}"
+			  click="open_clickHandler(event)"/>
+	<s:Button label="取消" 
+			  width="60"
+			  click="cancel_clickHandler(event)"/>
+</s:BorderContainer>

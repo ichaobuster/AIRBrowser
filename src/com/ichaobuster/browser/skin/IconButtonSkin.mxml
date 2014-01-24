@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+    ADOBE SYSTEMS INCORPORATED
+    Copyright 2008 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: Adobe permits you to use, modify, and distribute this file
+    in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for the Spark Button component.  
+
+       @see spark.components.Button
+        
+      @langversion 3.0
+      @playerversion Flash 10
+      @playerversion AIR 1.5
+      @productversion Flex 4
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+             xmlns:s="library://ns.adobe.com/flex/spark" 
+             xmlns:fb="http://ns.adobe.com/flashbuilder/2009"
+             minWidth="21" minHeight="21" 
+             alpha.disabled="0.5">
+     
+    <fx:Metadata>
+        <![CDATA[ 
+        /** 
+         * @copy spark.skins.spark.ApplicationSkin#hostComponent
+         */
+        [HostComponent("spark.components.Button")]
+        ]]>
+    </fx:Metadata>
+    
+    <fx:Script fb:purpose="styling">
+        <![CDATA[         
+			
+			import spark.filters.DropShadowFilter;
+            
+			[Bindable]
+			private var color:uint = 0;
+			private var noColor:Boolean = true;
+			
+			private var t:ColorTransform;
+			
+			[Bindable]
+			private var dropShadowFilter:DropShadowFilter = new DropShadowFilter(1,90,0xFDFDFD,1,0,0);
+			private var iconFilters:Array = new Array();
+			
+//			/**
+//			 * @private
+//			 */
+//			override protected function initializationComplete():void
+//			{
+//				super.initializationComplete();
+//			}
+			
+        ]]>        
+    </fx:Script>
+        
+    <!-- states -->
+    <s:states>
+        <s:State name="up" />
+        <s:State name="over" />
+        <s:State name="down" />
+        <s:State name="disabled" />
+    </s:states>
+	
+	<!-- layer 1: shadow -->
+	<!--- @private -->
+	<!--<s:Rect id="shadow" left="5" right="5" top="4" bottom="1" radiusX="2"
+			includeIn="over,down">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xDDDDDD" alpha="0.5"/>
+				<s:GradientEntry color="0xACACAC" alpha="0.5"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>-->
+	
+	<!-- layer 2: fill -->
+	<!--- @private -->
+	<s:Rect id="fill" left="1" right="1" top="1" bottom="1" radiusX="2"
+			includeIn="down">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="0xCFCFCF"
+								 alpha="0.4"/>
+				<s:GradientEntry color="0xBABBBA" 
+								 alpha="0.4"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<!--- icon display (all states except down) -->
+	<!--- @private -->
+	<s:BitmapImage id="iconDisplay"
+				   smooth="true" 
+				   fillMode="scale" 
+				   filters="{[dropShadowFilter]}"
+				   verticalCenter="0"
+				   horizontalCenter="0"
+				   width="{width-4}" height="{height-4}" />
+	
+	<!-- border -->
+	<!--- @private -->
+	<s:Rect id="border" left="1" right="1" top="1" bottom="1" radiusX="2"
+			includeIn="over,down">
+		<s:stroke>
+			<s:LinearGradientStroke weight="1" rotation="90">
+				<s:GradientEntry color.over="0xBDBDBD"
+								 color.down="0x5D5D5D"
+								 alpha="0.7"/>
+				<s:GradientEntry color.over="0x757575"
+								 color.down="0x838383"
+								 alpha="0.7"/>
+			</s:LinearGradientStroke>
+		</s:stroke>
+	</s:Rect>
+    
+	<!-- highlight -->
+	<!--- @private -->
+	<s:Rect id="highlight" left="2" right="2" top="2" bottom="2" radiusX="1"
+			includeIn="over,down">
+		<s:stroke>
+			<s:LinearGradientStroke weight="1" rotation="90">
+				<s:GradientEntry color.over="0xFFFFFF"
+								 color.down="0xC5C5C5"
+								 alpha="0.6"/>
+				<s:GradientEntry color.over="0xEFEFEF"
+								 color.down="0xB8B8B7"
+								 alpha="0.6"/>
+			</s:LinearGradientStroke>
+		</s:stroke>
+	</s:Rect>
+</s:Skin>

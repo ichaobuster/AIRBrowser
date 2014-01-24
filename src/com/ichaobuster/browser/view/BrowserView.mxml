@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		  xmlns:component="com.ichaobuster.browser.component.*"
+		  creationComplete="init()"
+		  gap="0"
+		  width="100%" height="100%"  >
+	<fx:Script>
+		<![CDATA[
+			import com.ichaobuster.browser.container.HTMLPageContainer;
+			import com.ichaobuster.browser.event.WebPageEvent;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.events.FlexEvent;
+			
+			protected function init():void
+			{
+				addEventListener(WebPageEvent.CREATE_NEW_TAB_WITH_URL, createNewTabEventHandler);
+				addEventListener(WebPageEvent.CLOSE_THIS_TAB, closeThisTabHandler);
+				BindingUtils.bindSetter(pageCountHandler, htmlViews, ["length"]);
+			}
+			
+			public function pageCountHandler(value:int):void{
+				if (value == 0){
+					addNewTab();
+				}
+			}
+			
+			private function createNewTabEventHandler(event:WebPageEvent):void{
+				addNewTab(event.location, false);
+			}
+			
+			private function closeThisTabHandler(event:WebPageEvent):void{
+				htmlViews.removeElementAt(htmlViews.selectedIndex);
+			}
+			
+			public function addNewTab(location:String=null, fixed:Boolean=false,
+									  homeLink:String="assets/page/about_blank.html",
+									  homeEnabled:Boolean=true, urlEditabled:Boolean=true, 
+									  addNewPageEnabled:Boolean=true, navigateByBrowser:Boolean=false):int{
+				var htmlPage:HTMLPageContainer = new HTMLPageContainer();
+				if (location!=null && location!=""){
+					htmlPage.location = location;
+				}else{
+					htmlPage.label = "新标签";
+				}
+				htmlPage.fixed = fixed;
+				htmlPage.homeLink = homeLink;
+				htmlPage.homeEnabled = homeEnabled;
+				htmlPage.urlEditabled = urlEditabled;
+				htmlPage.addNewPageEnabled = addNewPageEnabled;
+				htmlPage.navigateByBrowser = navigateByBrowser;
+				htmlViews.addElement(htmlPage);
+				htmlViews.selectedChild = htmlPage;
+				return htmlViews.getElementIndex(htmlPage);
+			}
+			
+			public function navigateToTabByIndex(index:int):void{
+				if (index>htmlViews.length-1){
+					return ;
+				}
+				htmlViews.selectedIndex = index;
+			}
+			
+			public function closeAllTabs():void{
+				htmlViews.removeAll();
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<component:BrowserTabBar id="tabbar" width="100%"
+							 dataProvider="{htmlViews}"/>
+	<s:Group width="100%" height="100%">
+		<s:Rect top="0" bottom="0" left="0" right="0">
+			<s:stroke>
+				<s:SolidColorStroke weight="2" color="#017ccc"/>
+			</s:stroke>
+		</s:Rect>
+		<mx:ViewStack id="htmlViews"
+					  top="2" bottom="2" 
+					  left="2" right="2"
+					  creationPolicy="all"/>
+	</s:Group> 
+	
+</s:VGroup>

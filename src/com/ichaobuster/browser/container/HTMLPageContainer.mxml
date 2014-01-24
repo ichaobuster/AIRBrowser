@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" 
+					xmlns:container="com.ichaobuster.browser.container.*"
+					width="100%" height="100%"  >
+	<fx:Script>
+		<![CDATA[
+			[Bindable]
+			public var location:String;
+			
+			[Bindable]
+			public var homeLink:String="assets/page/about_blank.html";
+			
+			[Bindable]
+			public var homeEnabled:Boolean = true;
+			
+			[Bindable]
+			public var urlEditabled:Boolean = true;
+			
+			[Bindable]
+			public var fixed:Boolean = false;
+			
+			[Bindable]
+			public var addNewPageEnabled:Boolean = true;
+			
+			[Bindable]
+			public var navigateByBrowser:Boolean = false;
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<container:HTMLPageView 
+					  width="100%" height="100%"
+					  location="{location}"
+					  label="@{label}"
+					  homeLink="{homeLink}"
+					  homeEnabled="{homeEnabled}"
+					  urlEditabled="{urlEditabled}"
+					  fixed="{fixed}"
+					  addNewPageEnabled="{addNewPageEnabled}"
+					  navigateByBrowser="{navigateByBrowser}"/>
+</s:NavigatorContent>
