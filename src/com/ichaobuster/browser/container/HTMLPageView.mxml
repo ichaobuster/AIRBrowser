@@ -112,7 +112,6 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 	<s:Rect top="0" bottom="0" left="0" right="0">
 		<s:stroke>
